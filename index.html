@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style type="text/css">
+.packet {
+background-color: white;
+margin-top: 8px;
+padding: 3px;
+width: 620px;
+}
+input {
+width: 200px;
+}
+.name {
+width: 200px;
+}
+.description{
+width: 400px;
+}
+body {
+background-color: lightgray;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+var validTypes = ['uint8_t', 'uint16_t', 'uint32_t', 'int8_t', 'int16_t', 'int32_t', 'float', 'bitfield'];
+function load() {
+  var packets = $.parseJSON($('#json').val()).packets;
+  console.log(packets);
+  packets.forEach(function (p) {
+    var d = $('<div class="packet">');
+    var name = $('<input class="name">');
+    name.val(p.name);
+    d.append(name);
+    var description = $('<input class="description">');
+    description.val(p.description);
+    d.append(description);
+    d.append('<br><br>');
+    var data = $('<div>');
+    p.data.forEach(function (d) {
+      var field = $('<div>');
+      var fieldName = $('<input>').val(d.name);
+      var fieldType = $('<select>');
+      validTypes.forEach(function (t) {
+        fieldType.append($('<option>').html(t));
+      });
+      fieldType.val(d.type);
+      field.append(fieldName);
+      field.append(fieldType);
+      data.append(field);
+    });
+    d.append(data);
+    $('#list').append(d);
+  });
+};
+</script>
+</head>
+<body>
+<textarea id="json"></textarea>
+<button onClick="load()">Load</button>
+<div id="list"></div>
+</body>
+</html>
